@@ -3,35 +3,24 @@ function get_input($key) {
     return isset($_GET[$key]) && $_GET[$key] !== '' ? floatval($_GET[$key]) : null;
 }
 
-$a = get_input('a');
-$b = get_input('b');
-$c = get_input('c');
+$sa = get_input('sa');
+$sl = get_input('sl');
+$ca = get_input('ca');
 
-$count = 0;
-if ($a !== null) $count++;
-if ($b !== null) $count++;
-if ($c !== null) $count++;
-
-if ($count >= 2) {
-    if ($a === null) {
-        $a = 100 - $b - $c;
-    } elseif ($b === null) {
-        $b = 100 - $a - $c;
-    } elseif ($c === null) {
-        $c = 100 - $a - $b;
-    }
+$sum = $sa + $sl + $ca;
+if(!$sum || $sum == 0)
+{
+    $sum = 1;
 }
 
-$valid = $a !== null && $b !== null && $c !== null && $a >= 0 && $b >= 0 && $c >= 0 && abs($a + $b + $c - 100) < 1e-6;
+$a = 100 * $ca / $sum;
+$b = 100 * $sa / $sum;
 
-if ($valid) {
-    // vertex coordinates of an equilateral triangle
-    $xA = 50;  $yA = 0;     // top (100% A)
-    $xB = 0;   $yB = 86.6;  // bottom left (100% B)
-    $xC = 100; $yC = 86.6;  // bottom right (100% C)
-    $x = ($a * $xA + $b * $xB + $c * $xC) / 100;
-    $y = ($a * $yA + $b * $yB + $c * $yC) / 100;
-}
+$xA = 50;  $yA = 0;     // top (100% A)
+$xB = 0;   $yB = 86.6;  // bottom left (100% B)
+$xC = 100; $yC = 86.6;  // bottom right (100% C)
+$x = 100 - $b - 0.57735 * 0.866 * $a;
+$y = 0.866 * (100 - $a);
 ?>
 <!DOCTYPE html>
 <html>
@@ -46,18 +35,18 @@ if ($valid) {
 <body>
 <h1>Ternary Point Calculator</h1>
 <form>
-    <label>A (%) <input name="a" value="<?php echo htmlspecialchars($a ?? ''); ?>"></label><br>
-    <label>B (%) <input name="b" value="<?php echo htmlspecialchars($b ?? ''); ?>"></label><br>
-    <label>C (%) <input name="c" value="<?php echo htmlspecialchars($c ?? ''); ?>"></label><br>
+    <label>Sand (mm) <input name="sa" value="<?php echo htmlspecialchars($sa ?? ''); ?>"></label><br>
+    <label>Slit (mm) <input name="sl" value="<?php echo htmlspecialchars($sl ?? ''); ?>"></label><br>
+    <label>Clay (mm) <input name="ca" value="<?php echo htmlspecialchars($ca ?? ''); ?>"></label><br>
     <button type="submit">Calculate</button>
 </form>
-<?php if ($valid): ?>
-<p>Values: A=<?php echo round($a,2); ?>%, B=<?php echo round($b,2); ?>%, C=<?php echo round($c,2); ?>%</p>
+<?php if ($sum): ?>
+<!-- <p>Values: A=<?php echo round($a,2); ?>%, B=<?php echo round($b,2); ?>%, C=<?php echo round($c,2); ?>%</p> -->
 <svg width="300" height="260" viewBox="0 0 100 86.6">
     <polygon points="50,0 0,86.6 100,86.6" fill="none" stroke="black"/>
-    <circle cx="<?php echo $x; ?>" cy="<?php echo 86.6 - $y; ?>" r="2" fill="red"/>
+    <circle cx="<?php echo $x; ?>" cy="<?php echo $y; ?>" r="2" fill="red"/>
 </svg>
-<?php elseif ($count >= 2): ?>
+<?php elseif (!$sum): ?>
 <p>Invalid values. Please ensure they are non-negative and sum to 100.</p>
 <?php endif; ?>
 </body>
