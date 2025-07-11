@@ -37,6 +37,21 @@ if (empty($errors)) {
     $xC = 100; $yC = 86.6;  // bottom right (100% C)
     $x = 100 - $b - 0.57735 * 0.866 * $a;
     $y = 0.866 * (100 - $a);
+
+    // New triangle points
+    $X_A = 0; $Y_A = 0;
+    $X_B = -200; $Y_B = 346;
+    $X_C = 200; $Y_C = 346;
+
+    // Compute barycentric coordinates
+    $denom = (($yB - $yC)*($xA - $xC) + ($xC - $xB)*($yA - $yC));
+    $u = (($yB - $yC)*($x - $xC) + ($xC - $xB)*($y - $yC)) / $denom;
+    $v = (($yC - $yA)*($x - $xC) + ($xA - $xC)*($y - $yC)) / $denom;
+    $w = 1 - $u - $v;
+
+    // Map to new triangle
+    $X = $u * $X_A + $v * $X_B + $w * $X_C;
+    $Y = $u * $Y_A + $v * $Y_B + $w * $Y_C;
 }
 ?>
 <!DOCTYPE html>
@@ -210,9 +225,7 @@ text   { stroke:none; cursor:default; }
    <text transform="translate( 200,400) scale(0.866,1) rotate(60)" y="0.5ex">-&#8201;0</text>
   </g>
  </g>
- <circle cx="0" cy="0" r="5" fill="red"/>
- <circle cx="200" cy="346" r="5" fill="green"/>
- <circle cx="-200" cy="346" r="5" fill="blue"/>
+ <circle cx="<?php echo $X; ?>" cy="<?php echo $Y; ?>" r="5" fill="black"/>
 </svg>
 <?php elseif (!empty($errors)): ?>
 <!-- Errors shown above -->
