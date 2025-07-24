@@ -155,27 +155,26 @@ text   { stroke:none; cursor:default; }
  <circle cx="0" cy="0" r="99999" fill="#ffffff"/>
  <g id="main" transform="scale(1,0.866)">
   <g stroke="#000000" stroke-width="1">
-   <switch>
-    <g class="clay thick" systemLanguage="aa">
-     <text transform="translate(100,210) scale(0.866,1)" y="0.6ex"><?php echo htmlspecialchars(t('line_50_clay')); ?></text>
-     <use xlink:href="#line_clay"/>
+    <g class="clay thick">
+      <text transform="translate(100,210) scale(0.866,1)" y="0.6ex"><?php echo htmlspecialchars(t('line_50_clay')); ?></text>
+      <use xlink:href="#line_clay"/>
     </g>
-    <g class="silt thick" systemLanguage="ba">
-     <text transform="translate(-120,400) scale(0.866,1) rotate(-60)" y="-0.6ex"><?php echo htmlspecialchars(t('line_20_silt')); ?></text>
-     <use xlink:href="#line_silt"/>
-     <use xlink:href="#line_clay"/>
+    <g class="silt thick">
+      <text transform="translate(-120,400) scale(0.866,1) rotate(-60)" y="-0.6ex"><?php echo htmlspecialchars(t('line_20_silt')); ?></text>
+      <use xlink:href="#line_silt"/>
+      <use xlink:href="#line_clay"/>
     </g>
-    <g class="sand thick" systemLanguage="ca">
-     <text transform="translate( 80,400) scale(0.866,1) rotate(60)" y="-0.6ex" text-anchor="end"><?php echo htmlspecialchars(t('line_30_sand')); ?></text>
-     <use xlink:href="#line_sand"/>
-     <use xlink:href="#line_silt"/>
-     <use xlink:href="#line_clay"/>
-     <use xlink:href="#sample1"/>
+    <g class="sand thick">
+      <text transform="translate( 80,400) scale(0.866,1) rotate(60)" y="-0.6ex" text-anchor="end"><?php echo htmlspecialchars(t('line_30_sand')); ?></text>
+      <use xlink:href="#line_sand"/>
+      <use xlink:href="#line_silt"/>
+      <use xlink:href="#line_clay"/>
+      <use xlink:href="#sample1"/>
     </g>
-    <g systemLanguage="da">
-     <use xlink:href="#sample1"/>
-     <use xlink:href="#sample2"/>
-     <use xlink:href="#sample3"/>
+    <g>
+      <use xlink:href="#sample1"/>
+      <use xlink:href="#sample2"/>
+      <use xlink:href="#sample3"/>
     </g>
     <g>
      <path d="M 0,0 l 80,160 l -40,80 h -100 l -30,-60 z" fill="#ffff9c"/><text transform="translate(0,150)" y="0.6ex"><tspan><?php echo htmlspecialchars(t('legend_clay')); ?></tspan></text>
@@ -191,7 +190,6 @@ text   { stroke:none; cursor:default; }
      <path d="M 55,290 h 90 l 30,60 h -30 l -25,50 h -120 z" fill="#9cce00"/><text transform="translate(90,350)" y="0.6ex"><tspan><?php echo htmlspecialchars(t('legend_silt_loam')); ?></tspan></text>
      <path d="M 145,350 h 30 l 25,50 h -80 z" fill="#00ff31"/><text transform="translate(160,370)" y="0.6ex"><tspan><?php echo htmlspecialchars(t('legend_silt')); ?></tspan></text>
     </g>
-   </switch>
    <path d="M 0,0 l 200,400 h -400 Z" fill="url(#pattern_grid)"/>
   </g>
   <g class="clay axis">
