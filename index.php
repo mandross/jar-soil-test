@@ -236,8 +236,25 @@ text   { stroke:none; cursor:default; }
    <text transform="translate( 200,400) scale(0.866,1) rotate(60)" y="0.5ex">-&#8201;0</text>
   </g>
  </g>
- <circle cx="<?php echo $X; ?>" cy="<?php echo $Y; ?>" r="5" fill="black"/>
+<circle cx="<?php echo $X; ?>" cy="<?php echo $Y; ?>" r="5" fill="black"/>
 </svg>
+<pre>
+|                         | ← 7.8 cm (Top)
+|        Clay             |
+|-------------------------| ← ~5.6 cm
+|        Silt             |
+|-------------------------| ← ~3.4 cm
+|        Sand             |
+|-------------------------| ← 0 cm (Bottom)
+</pre>
+<h2>How to do the Mason Jar Test</h2>
+<ol>
+  <li>Fill a clear jar about one third with soil.</li>
+  <li>Add water and a drop of dish soap leaving some headspace.</li>
+  <li>Shake vigorously to suspend all particles.</li>
+  <li>Let the jar sit undisturbed for 24 hours.</li>
+  <li>Measure the sand, silt and clay layers as shown above.</li>
+</ol>
 <?php elseif (!empty($errors)): ?>
 <!-- Errors shown above -->
 <?php endif; ?>
