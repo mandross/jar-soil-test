@@ -3,26 +3,32 @@ function get_input($key) {
     return isset($_GET[$key]) && $_GET[$key] !== '' ? floatval($_GET[$key]) : null;
 }
 
-$sa = get_input('sa');
-$sl = get_input('sl');
-$ca = get_input('ca');
+
+$l1 = get_input('l1');
+$l2 = get_input('l2');
+$l3 = get_input('l3');
+
+$sa = $l1;
+$sl = $l2 - $sa;
+$ca = $l3 - $l2;
 
 $errors = [];
 
 // Validation
 if ($_GET) {
-    if ($sa === null || $sl === null || $ca === null) {
+    if ($l1 === null || $l2 === null || $l3 === null) {
         $errors[] = 'All fields are required.';
     } else {
-        if ($sa < 0) $errors[] = 'Sand must be greater than or equal to 0.';
-        if ($sl < 0) $errors[] = 'Silt must be greater than or equal to 0.';
-        if ($ca < 0) $errors[] = 'Clay must be greater than or equal to 0.';
+        if ($l1 < 0) $errors[]   = 'Sand level must be greater than or equal to 0.';
+        if ($l2 < $l1) $errors[] = 'Silt level must be greater than sand level.';
+        if ($l3 < $l2) $errors[] = 'Clay level must be greater than slit level.';
         $sum = $sa + $sl + $ca;
-        if ($sum <= 0) $errors[] = 'The sum of all values must be greater than 0.';
+        if ($sum != $l3) $errors[] = 'The sum of all thicknesses must be equal to clay level';
     }
 } else {
     $sum = $sa + $sl + $ca;
 }
+
 
 if (empty($errors)) {
     if(!$sum || $sum == 0) {
@@ -80,9 +86,9 @@ if (empty($errors)) {
     </div>
 <?php endif; ?>
 <form>
-    <label>Sand (mm) <input name="sa" type="number" min="0" step="any" value="<?php echo htmlspecialchars($sa ?? ''); ?>" required></label><br>
-    <label>Silt (mm) <input name="sl" type="number" min="0" step="any" value="<?php echo htmlspecialchars($sl ?? ''); ?>" required></label><br>
-    <label>Clay (mm) <input name="ca" type="number" min="0" step="any" value="<?php echo htmlspecialchars($ca ?? ''); ?>" required></label><br>
+    <label>Sand (mm) <input name="l1" type="number" min="0" step="any" value="<?php echo htmlspecialchars($l1 ?? ''); ?>" required></label><br>
+    <label>Silt (mm) <input name="l2" type="number" min="0" step="any" value="<?php echo htmlspecialchars($l2 ?? ''); ?>" required></label><br>
+    <label>Clay (mm) <input name="l3" type="number" min="0" step="any" value="<?php echo htmlspecialchars($l3 ?? ''); ?>" required></label><br>
     <button type="submit">Calculate</button>
 </form>
 <?php if (empty($errors) && $sum): ?>
