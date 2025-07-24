@@ -1,4 +1,16 @@
 <?php
+// Determine language
+$lang = isset($_GET['lang']) ? preg_replace('/[^a-z]/i','', $_GET['lang']) : 'en';
+$langFile = __DIR__ . "/lang/$lang.php";
+if (!file_exists($langFile)) {
+    $langFile = __DIR__ . '/lang/en.php';
+    $lang = 'en';
+}
+$translations = include $langFile;
+function t(string $key): string {
+    global $translations;
+    return $translations[$key] ?? $key;
+}
 function get_input($key) {
     return isset($_GET[$key]) && $_GET[$key] !== '' ? floatval($_GET[$key]) : null;
 }
@@ -12,13 +24,13 @@ $errors = [];
 // Validation
 if ($_GET) {
     if ($sa === null || $sl === null || $ca === null) {
-        $errors[] = 'All fields are required.';
+        $errors[] = t('error_all_required');
     } else {
-        if ($sa < 0) $errors[] = 'Sand must be greater than or equal to 0.';
-        if ($sl < 0) $errors[] = 'Silt must be greater than or equal to 0.';
-        if ($ca < 0) $errors[] = 'Clay must be greater than or equal to 0.';
+        if ($sa < 0) $errors[] = t('error_sand_ge_0');
+        if ($sl < 0) $errors[] = t('error_silt_ge_0');
+        if ($ca < 0) $errors[] = t('error_clay_ge_0');
         $sum = $sa + $sl + $ca;
-        if ($sum <= 0) $errors[] = 'The sum of all values must be greater than 0.';
+        if ($sum <= 0) $errors[] = t('error_sum_gt_0');
     }
 } else {
     $sum = $sa + $sl + $ca;
@@ -58,7 +70,7 @@ if (empty($errors)) {
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Ternary Diagram</title>
+    <title><?php echo htmlspecialchars(t('page_title')); ?></title>
     <style>
         body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 1em; }
         .container { max-width: 800px; margin: auto; background: #fff; padding: 2em; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
@@ -71,7 +83,7 @@ if (empty($errors)) {
 </head>
 <body>
 <div class="container">
-<h1>The Mason Jar Test</h1>
+<h1><?php echo htmlspecialchars(t('app_title')); ?></h1>
 <?php if (!empty($errors)): ?>
     <div class="error">
         <?php foreach ($errors as $error): ?>
@@ -80,10 +92,14 @@ if (empty($errors)) {
     </div>
 <?php endif; ?>
 <form>
-    <label>Sand (mm) <input name="sa" type="number" min="0" step="any" value="<?php echo htmlspecialchars($sa ?? ''); ?>" required></label><br>
-    <label>Silt (mm) <input name="sl" type="number" min="0" step="any" value="<?php echo htmlspecialchars($sl ?? ''); ?>" required></label><br>
-    <label>Clay (mm) <input name="ca" type="number" min="0" step="any" value="<?php echo htmlspecialchars($ca ?? ''); ?>" required></label><br>
-    <button type="submit">Calculate</button>
+    <label><?php echo htmlspecialchars(t('sand_label')); ?> <input name="sa" type="number" min="0" step="any" value="<?php echo htmlspecialchars($sa ?? ''); ?>" required></label><br>
+    <label><?php echo htmlspecialchars(t('silt_label')); ?> <input name="sl" type="number" min="0" step="any" value="<?php echo htmlspecialchars($sl ?? ''); ?>" required></label><br>
+    <label><?php echo htmlspecialchars(t('clay_label')); ?> <input name="ca" type="number" min="0" step="any" value="<?php echo htmlspecialchars($ca ?? ''); ?>" required></label><br>
+    <select name="lang">
+        <option value="en"<?php if($lang==='en') echo ' selected'; ?>>English</option>
+        <option value="pl"<?php if($lang==='pl') echo ' selected'; ?>>Polski</option>
+    </select><br>
+    <button type="submit"><?php echo htmlspecialchars(t('calculate')); ?></button>
 </form>
 <?php if (empty($errors) && $sum): ?>
 <!-- <p>Values: A=<?php echo round($a,2); ?>%, B=<?php echo round($b,2); ?>%, C=<?php echo round($c,2); ?>%</p> -->
@@ -123,16 +139,16 @@ text   { stroke:none; cursor:default; }
   <path id="line_silt" class="silt" d="M 40,80 L -120,400"/>
   <path id="line_sand" class="sand" d="M -60,120 L 80,400"/>
   <g id="sample1" class="point" transform="translate(-20,200)">
-   <text transform="translate(10,10) scale(0.866,1)" y="0.6ex">Sample 1</text>
+   <text transform="translate(10,10) scale(0.866,1)" y="0.6ex"><?php echo htmlspecialchars(t('sample1')); ?></text>
    <ellipse id="sample" rx="5" ry="6"/>
    <use xlink:href="#sample"/>
   </g>
   <g id="sample2" class="point" transform="translate(60,360)">
-   <text transform="translate(10,10) scale(0.866,1)" y="0.6ex">Sample 2</text>
+   <text transform="translate(10,10) scale(0.866,1)" y="0.6ex"><?php echo htmlspecialchars(t('sample2')); ?></text>
    <rect x="-4" y="-5" width="8" height="10"/>
   </g>
   <g id="sample3" class="point" transform="translate(-60,360)">
-   <text transform="translate(10,10) scale(0.866,1)" y="0.6ex">Sample 3</text>
+   <text transform="translate(10,10) scale(0.866,1)" y="0.6ex"><?php echo htmlspecialchars(t('sample3')); ?></text>
    <path d="M 0,-8 l 6,12 h -12"/>
   </g>
  </defs>
@@ -141,16 +157,16 @@ text   { stroke:none; cursor:default; }
   <g stroke="#000000" stroke-width="1">
    <switch>
     <g class="clay thick" systemLanguage="aa">
-     <text transform="translate(100,210) scale(0.866,1)" y="0.6ex">50% clay line</text>
+     <text transform="translate(100,210) scale(0.866,1)" y="0.6ex"><?php echo htmlspecialchars(t('line_50_clay')); ?></text>
      <use xlink:href="#line_clay"/>
     </g>
     <g class="silt thick" systemLanguage="ba">
-     <text transform="translate(-120,400) scale(0.866,1) rotate(-60)" y="-0.6ex">20% silt line</text>
+     <text transform="translate(-120,400) scale(0.866,1) rotate(-60)" y="-0.6ex"><?php echo htmlspecialchars(t('line_20_silt')); ?></text>
      <use xlink:href="#line_silt"/>
      <use xlink:href="#line_clay"/>
     </g>
     <g class="sand thick" systemLanguage="ca">
-     <text transform="translate( 80,400) scale(0.866,1) rotate(60)" y="-0.6ex" text-anchor="end">30% sand line</text>
+     <text transform="translate( 80,400) scale(0.866,1) rotate(60)" y="-0.6ex" text-anchor="end"><?php echo htmlspecialchars(t('line_30_sand')); ?></text>
      <use xlink:href="#line_sand"/>
      <use xlink:href="#line_silt"/>
      <use xlink:href="#line_clay"/>
@@ -162,18 +178,18 @@ text   { stroke:none; cursor:default; }
      <use xlink:href="#sample3"/>
     </g>
     <g>
-     <path d="M 0,0 l 80,160 l -40,80 h -100 l -30,-60 z" fill="#ffff9c"/><text transform="translate(0,150)" y="0.6ex"><tspan>clay</tspan></text>
-     <path d="M -60,240 h 100 l 25,50 h -100 z" fill="#ceff63"/><text transform="translate(5,270)" y="0.6ex"><tspan>clay loam</tspan></text>
-     <path d="M -35,290 h 90 l -40,80 h -40 l -25,-50 z" fill="#ce9c00"/><text transform="translate(-5,330)" y="0.6ex"><tspan>loam</tspan></text>
-     <path d="M -90,180 l 40,80 h -80 z" fill="#ff0000"/><text transform="translate(-90,230)" y="0.6ex"><tspan>sandy</tspan><tspan x="0" dy="20">clay</tspan></text>
-     <path d="M -130,260 h 80 l 15,30 l -15,30 h -110 z" fill="#ff9c9c"/><text transform="translate(-90,290)" y="0.6ex"><tspan>sandy clay</tspan><tspan x="0" dy="20">loam</tspan></text>
-     <path d="M -160,320 h 110 l 25,50 h 40 l -15,30 h -80 l -90,-60 z" fill="#ffceff"/><text transform="translate(-90,350)" y="0.6ex"><tspan>sandy loam</tspan></text>
-     <path d="M -170,340 l 90,60 h -60 l -40,-40 z" fill="#ffcece"/><text transform="translate(-142,375) scale(0.95,1)" y="0.6ex"><tspan>loamy</tspan><tspan x="13" dy="13">sand</tspan></text>
-     <path d="M -180,360 l 40,40 h -60 z" fill="#ffce9c"/><text transform="translate(-175,390)" y="0.6ex"><tspan>sand</tspan></text>
-     <path d="M 80,160 l 40,80 h -80 z" fill="#9cffce"/><text transform="translate(80,210)" y="0.6ex"><tspan>silty</tspan><tspan x="0" dy="20">clay</tspan></text>
-     <path d="M 40,240 h 80 l 25,50 h -80 z" fill="#63ce9c"/><text transform="translate(90,250)" y="0.6ex"><tspan>silty</tspan><tspan x="5" dy="20">clay loam</tspan></text>
-     <path d="M 55,290 h 90 l 30,60 h -30 l -25,50 h -120 z" fill="#9cce00"/><text transform="translate(90,350)" y="0.6ex"><tspan>silt loam</tspan></text>
-     <path d="M 145,350 h 30 l 25,50 h -80 z" fill="#00ff31"/><text transform="translate(160,370)" y="0.6ex"><tspan>silt</tspan></text>
+     <path d="M 0,0 l 80,160 l -40,80 h -100 l -30,-60 z" fill="#ffff9c"/><text transform="translate(0,150)" y="0.6ex"><tspan><?php echo htmlspecialchars(t('legend_clay')); ?></tspan></text>
+     <path d="M -60,240 h 100 l 25,50 h -100 z" fill="#ceff63"/><text transform="translate(5,270)" y="0.6ex"><tspan><?php echo htmlspecialchars(t('legend_clay_loam')); ?></tspan></text>
+     <path d="M -35,290 h 90 l -40,80 h -40 l -25,-50 z" fill="#ce9c00"/><text transform="translate(-5,330)" y="0.6ex"><tspan><?php echo htmlspecialchars(t('legend_loam')); ?></tspan></text>
+     <path d="M -90,180 l 40,80 h -80 z" fill="#ff0000"/><text transform="translate(-90,230)" y="0.6ex"><tspan><?php echo htmlspecialchars(t('legend_sandy')); ?></tspan><tspan x="0" dy="20"><?php echo htmlspecialchars(t('legend_clay')); ?></tspan></text>
+     <path d="M -130,260 h 80 l 15,30 l -15,30 h -110 z" fill="#ff9c9c"/><text transform="translate(-90,290)" y="0.6ex"><tspan><?php echo htmlspecialchars(t('legend_sandy_clay')); ?></tspan><tspan x="0" dy="20"><?php echo htmlspecialchars(t('legend_loam')); ?></tspan></text>
+     <path d="M -160,320 h 110 l 25,50 h 40 l -15,30 h -80 l -90,-60 z" fill="#ffceff"/><text transform="translate(-90,350)" y="0.6ex"><tspan><?php echo htmlspecialchars(t('legend_sandy_loam')); ?></tspan></text>
+     <path d="M -170,340 l 90,60 h -60 l -40,-40 z" fill="#ffcece"/><text transform="translate(-142,375) scale(0.95,1)" y="0.6ex"><tspan><?php echo htmlspecialchars(t('legend_loamy')); ?></tspan><tspan x="13" dy="13"><?php echo htmlspecialchars(t('legend_sand')); ?></tspan></text>
+     <path d="M -180,360 l 40,40 h -60 z" fill="#ffce9c"/><text transform="translate(-175,390)" y="0.6ex"><tspan><?php echo htmlspecialchars(t('legend_sand')); ?></tspan></text>
+     <path d="M 80,160 l 40,80 h -80 z" fill="#9cffce"/><text transform="translate(80,210)" y="0.6ex"><tspan><?php echo htmlspecialchars(t('legend_silty')); ?></tspan><tspan x="0" dy="20"><?php echo htmlspecialchars(t('legend_clay')); ?></tspan></text>
+     <path d="M 40,240 h 80 l 25,50 h -80 z" fill="#63ce9c"/><text transform="translate(90,250)" y="0.6ex"><tspan><?php echo htmlspecialchars(t('legend_silty')); ?></tspan><tspan x="5" dy="20"><?php echo htmlspecialchars(t('legend_clay_loam')); ?></tspan></text>
+     <path d="M 55,290 h 90 l 30,60 h -30 l -25,50 h -120 z" fill="#9cce00"/><text transform="translate(90,350)" y="0.6ex"><tspan><?php echo htmlspecialchars(t('legend_silt_loam')); ?></tspan></text>
+     <path d="M 145,350 h 30 l 25,50 h -80 z" fill="#00ff31"/><text transform="translate(160,370)" y="0.6ex"><tspan><?php echo htmlspecialchars(t('legend_silt')); ?></tspan></text>
     </g>
    </switch>
    <path d="M 0,0 l 200,400 h -400 Z" fill="url(#pattern_grid)"/>
@@ -181,7 +197,7 @@ text   { stroke:none; cursor:default; }
   <g class="clay axis">
    <g class="arrow" transform="translate(-100,200) scale(0.866,1) rotate(-60)">
     <use xlink:href="#arrow"/>
-    <text y="0.6ex" dy="-50">Clay Separate (%)</text>
+    <text y="0.6ex" dy="-50"><?php echo htmlspecialchars(t('axis_clay')); ?></text>
    </g>
    <text transform="translate(   0,  0) scale(0.866,1)" y="0.5ex">100&#8202;-</text>
    <text transform="translate( -20, 40) scale(0.866,1)" y="0.5ex" >90&#8202;-</text>
@@ -198,7 +214,7 @@ text   { stroke:none; cursor:default; }
   <g class="silt axis">
    <g class="arrow" transform="translate(100,200) scale(0.866,1) rotate(60)">
     <use xlink:href="#arrow"/>
-    <text y="0.6ex" dy="-50">Silt Separate (%)</text>
+    <text y="0.6ex" dy="-50"><?php echo htmlspecialchars(t('axis_silt')); ?></text>
    </g>
    <text transform="translate(  0,  0) scale(0.866,1) rotate(-60)" y="0.5ex">-&#8201;0</text>
    <text transform="translate( 20, 40) scale(0.866,1) rotate(-60)" y="0.5ex">-&#8202;10</text>
@@ -215,7 +231,7 @@ text   { stroke:none; cursor:default; }
   <g class="sand axis">
    <g class="arrow" transform="translate(0,400) scale(0.866,1) rotate(180)">
     <use xlink:href="#arrow"/>
-    <text transform="rotate(180)" y="0.6ex" dy="50">Sand Separate (%)</text>
+    <text transform="rotate(180)" y="0.6ex" dy="50"><?php echo htmlspecialchars(t('axis_sand')); ?></text>
    </g>
    <text transform="translate(-200,400) scale(0.866,1) rotate(60)" y="0.5ex">-&#8202;100</text>
    <text transform="translate(-160,400) scale(0.866,1) rotate(60)" y="0.5ex">-&#8201;90</text>
