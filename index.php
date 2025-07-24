@@ -73,6 +73,8 @@ if (empty($errors)) {
         input[type=number] { width: 100%; padding: 0.4em; margin-top: 0.2em; box-sizing: border-box; }
         button { padding: 0.5em 1em; margin-top: 1em; }
         .error { color: red; margin-bottom: 1em; }
+        .instructions { max-width: 400px; margin: 2em auto; text-align: center; }
+        .instructions pre { display: inline-block; background: #f9f9f9; padding: 1em; margin-top: 1em; }
     </style>
 </head>
 <body>
@@ -239,6 +241,7 @@ text   { stroke:none; cursor:default; }
 <circle cx="<?php echo $X; ?>" cy="<?php echo $Y; ?>" r="5" fill="black"/>
 </svg>
 
+<div class="instructions">
 <h2>How To</h2>
 <ol>
   <li>Take the soil sample from the full profile (35-40 cm). </li>
@@ -259,6 +262,7 @@ text   { stroke:none; cursor:default; }
 |        Sand             |
 |-------------------------| ← 0 mm (Bottom)
 </pre>
+</div>
 <?php elseif (!empty($errors)): ?>
 <!-- Errors shown above -->
 <?php endif; ?>
