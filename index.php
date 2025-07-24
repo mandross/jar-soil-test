@@ -60,12 +60,17 @@ if (empty($errors)) {
     <meta charset="utf-8">
     <title>Ternary Diagram</title>
     <style>
-        body { font-family: Arial, sans-serif; }
-        svg { background: #f9f9f9; }
+        body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 1em; }
+        .container { max-width: 800px; margin: auto; background: #fff; padding: 2em; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        svg { display: block; margin: 2em auto; background: #f9f9f9; }
+        form label { display: block; margin-bottom: 0.5em; }
+        input[type=number] { width: 100%; padding: 0.4em; margin-top: 0.2em; box-sizing: border-box; }
+        button { padding: 0.5em 1em; margin-top: 1em; }
         .error { color: red; margin-bottom: 1em; }
     </style>
 </head>
 <body>
+<div class="container">
 <h1>Ternary Point Calculator</h1>
 <?php if (!empty($errors)): ?>
     <div class="error">
@@ -230,6 +235,7 @@ text   { stroke:none; cursor:default; }
 <?php elseif (!empty($errors)): ?>
 <!-- Errors shown above -->
 <?php endif; ?>
+</div>
 </body>
 </html>
 
