@@ -238,23 +238,27 @@ text   { stroke:none; cursor:default; }
  </g>
 <circle cx="<?php echo $X; ?>" cy="<?php echo $Y; ?>" r="5" fill="black"/>
 </svg>
-<pre>
-|                         | ← 7.8 cm (Top)
-|        Clay             |
-|-------------------------| ← ~5.6 cm
-|        Silt             |
-|-------------------------| ← ~3.4 cm
-|        Sand             |
-|-------------------------| ← 0 cm (Bottom)
-</pre>
-<h2>How to do the Mason Jar Test</h2>
+
+<h2>How To</h2>
 <ol>
+  <li>Take the soil sample from the full profile (35-40 cm). </li>
+  <li>Rub it through coarse sieve. </li>
   <li>Fill a clear jar about one third with soil.</li>
-  <li>Add water and a drop of dish soap leaving some headspace.</li>
-  <li>Shake vigorously to suspend all particles.</li>
+  <li>Add water and a tbs of dishwasher powder leaving some headspace.</li>
+  <li>Shake vigorously to suspend all particles for a minute or two.</li>
   <li>Let the jar sit undisturbed for 24 hours.</li>
-  <li>Measure the sand, silt and clay layers as shown above.</li>
+  <li>Measure the sand, silt and clay layers as shown below.</li>
 </ol>
+<pre>
+|                         |
+|-------------------------| ← Clay level [mm]
+|        Clay             |
+|-------------------------| ← Silt level [mm]
+|        Silt             |
+|-------------------------| ← Sand level [mm]
+|        Sand             |
+|-------------------------| ← 0 mm (Bottom)
+</pre>
 <?php elseif (!empty($errors)): ?>
 <!-- Errors shown above -->
 <?php endif; ?>
