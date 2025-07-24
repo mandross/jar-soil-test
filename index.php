@@ -97,7 +97,7 @@ if (empty($errors)) {
     <polygon points="50,0 0,86.6 100,86.6" fill="none" stroke="black"/>
     <circle cx="<?php echo $x; ?>" cy="<?php echo $y; ?>" r="2" fill="red"/>
 </svg> -->
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="75%" height="75%" viewBox="-219 -20 440 420">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="95%" height="95%" viewBox="-219 -20 440 420">
  <title>SoilTexture USDA</title>
  <desc>A soil texture diagram redrawn from the USDA webpage http://nrcs.usda.gov/Internet/FSE_MEDIA/nrcs142p2_050242.jpg with colours from http://commons.wikimedia.org/wiki/File:SoilTexture_USDA.png by CMG Lee.</desc>
  <style type="text/css">
