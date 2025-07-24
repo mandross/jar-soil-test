@@ -79,9 +79,16 @@ if (empty($errors)) {
         input[type=number] { width: 100%; padding: 0.4em; margin-top: 0.2em; box-sizing: border-box; }
         button { padding: 0.5em 1em; margin-top: 1em; }
         .error { color: red; margin-bottom: 1em; }
+        .lang-select { position: fixed; top: 1em; right: 1em; }
     </style>
 </head>
 <body>
+<div class="lang-select">
+    <select name="lang" id="lang-select">
+        <option value="en"<?php if($lang==='en') echo ' selected'; ?>>EN</option>
+        <option value="pl"<?php if($lang==='pl') echo ' selected'; ?>>PL</option>
+    </select>
+</div>
 <div class="container">
 <h1><?php echo htmlspecialchars(t('app_title')); ?></h1>
 <?php if (!empty($errors)): ?>
@@ -95,10 +102,6 @@ if (empty($errors)) {
     <label><?php echo htmlspecialchars(t('sand_label')); ?> <input name="sa" type="number" min="0" step="any" value="<?php echo htmlspecialchars($sa ?? ''); ?>" required></label><br>
     <label><?php echo htmlspecialchars(t('silt_label')); ?> <input name="sl" type="number" min="0" step="any" value="<?php echo htmlspecialchars($sl ?? ''); ?>" required></label><br>
     <label><?php echo htmlspecialchars(t('clay_label')); ?> <input name="ca" type="number" min="0" step="any" value="<?php echo htmlspecialchars($ca ?? ''); ?>" required></label><br>
-    <select name="lang">
-        <option value="en"<?php if($lang==='en') echo ' selected'; ?>>English</option>
-        <option value="pl"<?php if($lang==='pl') echo ' selected'; ?>>Polski</option>
-    </select><br>
     <button type="submit"><?php echo htmlspecialchars(t('calculate')); ?></button>
 </form>
 <?php if (empty($errors) && $sum): ?>
@@ -250,6 +253,21 @@ text   { stroke:none; cursor:default; }
 <!-- Errors shown above -->
 <?php endif; ?>
 </div>
+<script>
+document.getElementById('lang-select').addEventListener('change', function () {
+    var url = new URL(window.location);
+    url.searchParams.set('lang', this.value);
+    ['sa', 'sl', 'ca'].forEach(function (param) {
+        var el = document.querySelector('[name=' + param + ']');
+        if (el && el.value !== '') {
+            url.searchParams.set(param, el.value);
+        } else {
+            url.searchParams.delete(param);
+        }
+    });
+    window.location = url.toString();
+});
+</script>
 </body>
 </html>
 
