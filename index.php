@@ -60,13 +60,18 @@ if (empty($errors)) {
     <meta charset="utf-8">
     <title>Ternary Diagram</title>
     <style>
-        body { font-family: Arial, sans-serif; }
-        svg { background: #f9f9f9; }
+        body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 1em; }
+        .container { max-width: 800px; margin: auto; background: #fff; padding: 2em; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        svg { display: block; margin: 2em auto; background: #f9f9f9; }
+        form label { display: block; margin-bottom: 0.5em; }
+        input[type=number] { width: 100%; padding: 0.4em; margin-top: 0.2em; box-sizing: border-box; }
+        button { padding: 0.5em 1em; margin-top: 1em; }
         .error { color: red; margin-bottom: 1em; }
     </style>
 </head>
 <body>
-<h1>Ternary Point Calculator</h1>
+<div class="container">
+<h1>The Mason Jar Test</h1>
 <?php if (!empty($errors)): ?>
     <div class="error">
         <?php foreach ($errors as $error): ?>
@@ -86,7 +91,7 @@ if (empty($errors)) {
     <polygon points="50,0 0,86.6 100,86.6" fill="none" stroke="black"/>
     <circle cx="<?php echo $x; ?>" cy="<?php echo $y; ?>" r="2" fill="red"/>
 </svg> -->
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25%" height="25%" viewBox="-219 -20 440 420">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="75%" height="75%" viewBox="-219 -20 440 420">
  <title>SoilTexture USDA</title>
  <desc>A soil texture diagram redrawn from the USDA webpage http://nrcs.usda.gov/Internet/FSE_MEDIA/nrcs142p2_050242.jpg with colours from http://commons.wikimedia.org/wiki/File:SoilTexture_USDA.png by CMG Lee.</desc>
  <style type="text/css">
@@ -230,6 +235,7 @@ text   { stroke:none; cursor:default; }
 <?php elseif (!empty($errors)): ?>
 <!-- Errors shown above -->
 <?php endif; ?>
+</div>
 </body>
 </html>
 
