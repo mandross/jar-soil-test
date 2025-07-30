@@ -38,11 +38,11 @@ if (empty($errors)) {
     $a = 100 * $ca / $sum;
     $b = 100 * $sa / $sum;
 
-    $xA = 50;  $yA = 0;     // top (100% A)
-    $xB = 0;   $yB = 86.6;  // bottom left (100% B)
-    $xC = 100; $yC = 86.6;  // bottom right (100% C)
-    $x = 100 - $b - 0.57735 * 0.866 * $a;
-    $y = 0.866 * (100 - $a);
+    $xA = 50;  $yA = 0;                // top (100% A)
+    $xB = 0;   $yB = 100 * sqrt(3)/2;  // bottom left (100% B)
+    $xC = 100; $yC = 100 * sqrt(3)/2;  // bottom right (100% C)
+    $x = 100 - $b - tan(pi()/6) * sqrt(3)/2 * $a;
+    $y = sqrt(3)/2 * (100 - $a);
 
     // New triangle points
     $X_A = 0; $Y_A = 0;
