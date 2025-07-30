@@ -4,7 +4,11 @@ function get_input($key) {
 }
 
 // Load translations and choose language
-$trans = require __DIR__ . '/translations.php';
+$trans = [];
+foreach (glob(__DIR__ . '/lang/*.php') as $file) {
+    $code = basename($file, '.php');
+    $trans[$code] = require $file;
+}
 $supported = array_keys($trans);
 if (isset($_GET['lang']) && in_array($_GET['lang'], $supported)) {
     $lang = $_GET['lang'];
@@ -186,10 +190,11 @@ text   { stroke:none; cursor:default; }
      <path d="M -180,360 l 40,40 h -60 z" fill="#ffce9c"/><text transform="translate(-175,390)" y="0.6ex"><tspan><?php echo t('svg_sand'); ?></tspan></text>
      <path d="M 80,160 l 40,80 h -80 z" fill="#9cffce"/><text transform="translate(80,210)" y="0.6ex"><tspan><?php echo t('svg_silty_clay'); ?></tspan></text>
      <path d="M 40,240 h 80 l 25,50 h -80 z" fill="#63ce9c"/><text transform="translate(90,250)" y="0.6ex"><tspan><?php echo t('svg_silty_clay_loam'); ?></tspan></text>
-     <path d="M 55,290 h 90 l 30,60 h -30 l -25,50 h -120 z" fill="#9cce00"/><text transform="translate(90,350)" y="0.6ex"><tspan><?php echo t('svg_silt_loam'); ?></tspan></text>
-     <path d="M 145,350 h 30 l 25,50 h -80 z" fill="#00ff31"/><text transform="translate(160,370)" y="0.6ex"><tspan><?php echo t('svg_silt'); ?></tspan></text>
+    <path d="M 55,290 h 90 l 30,60 h -30 l -25,50 h -120 z" fill="#9cce00"/><text transform="translate(90,350)" y="0.6ex"><tspan><?php echo t('svg_silt_loam'); ?></tspan></text>
+    <path d="M 145,350 h 30 l 25,50 h -80 z" fill="#00ff31"/><text transform="translate(160,370)" y="0.6ex"><tspan><?php echo t('svg_silt'); ?></tspan></text>
    </g>
   </g>
+  <path d="M 0,0 l 200,400 h -400 Z" fill="url(#pattern_grid)"/>
   <g class="clay axis">
    <g class="arrow" transform="translate(-100,200) scale(0.866,1) rotate(-60)">
     <use xlink:href="#arrow"/>
