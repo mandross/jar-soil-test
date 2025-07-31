@@ -262,11 +262,17 @@ text   { stroke:none; cursor:default; }
 <pre>
 |                         |
 |-------------------------| ← <?php echo t('pre_clay_level'); ?>
-|        <?php echo t('pre_clay'); ?>             |
+
+<?php echo t('pre_clay'); ?>
+
 |-------------------------| ← <?php echo t('pre_silt_level'); ?>
-|        <?php echo t('pre_silt'); ?>             |
+
+<?php echo t('pre_silt'); ?>
+
 |-------------------------| ← <?php echo t('pre_sand_level'); ?>
-|        <?php echo t('pre_sand'); ?>             |
+
+<?php echo t('pre_sand'); ?>
+
 |-------------------------| ← <?php echo t('pre_zero'); ?>
 </pre>
 <?php elseif (!empty($errors)): ?>
