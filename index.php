@@ -3,6 +3,25 @@ function get_input($key) {
     return isset($_GET[$key]) && $_GET[$key] !== '' ? floatval($_GET[$key]) : null;
 }
 
+// Load translations and choose language
+$trans = [];
+foreach (glob(__DIR__ . '/lang/*.php') as $file) {
+    $code = basename($file, '.php');
+    $trans[$code] = require $file;
+}
+$supported = array_keys($trans);
+if (isset($_GET['lang']) && in_array($_GET['lang'], $supported)) {
+    $lang = $_GET['lang'];
+} else {
+    $browser = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '', 0, 2);
+    $lang = in_array($browser, $supported) ? $browser : 'en';
+}
+
+
+function t($key) {
+    global $trans, $lang;
+    return $trans[$lang][$key] ?? $key;
+}
 
 $l1 = get_input('l1');
 $l2 = get_input('l2');
@@ -13,28 +32,25 @@ $sl = $l2 - $sa;
 $ca = $l3 - $l2;
 
 $errors = [];
-
 // Validation
 if ($_GET) {
     if ($l1 === null || $l2 === null || $l3 === null) {
-        $errors[] = 'All fields are required.';
+        $errors[] = t('all_fields');
     } else {
-        if ($l1 < 0) $errors[]   = 'Sand level must be greater than or equal to 0.';
-        if ($l2 < $l1) $errors[] = 'Silt level must be greater than sand level.';
-        if ($l3 < $l2) $errors[] = 'Clay level must be greater than slit level.';
+        if ($l1 < 0) $errors[]   = t('sand_err');
+        if ($l2 < $l1) $errors[] = t('silt_err');
+        if ($l3 < $l2) $errors[] = t('clay_err');
         $sum = $sa + $sl + $ca;
-        if ($sum != $l3) $errors[] = 'The sum of all thicknesses must be equal to clay level';
+        if ($sum != $l3) $errors[] = t('sum_err');
     }
 } else {
     $sum = $sa + $sl + $ca;
 }
 
-
 if (empty($errors)) {
-    if(!$sum || $sum == 0) {
+    if (!$sum || $sum == 0) {
         $sum = 1;
     }
-
     $a = 100 * $ca / $sum;
     $b = 100 * $sa / $sum;
 
@@ -61,13 +77,14 @@ if (empty($errors)) {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="<?php echo $lang; ?>">
 <head>
     <meta charset="utf-8">
     <title>Ternary Diagram</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 1em; }
-        .container { max-width: 800px; margin: auto; background: #fff; padding: 2em; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .container { position: relative; max-width: 800px; margin: auto; background: #fff; padding: 2em; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .lang-select { position: absolute; top: 1em; right: 1em; }
         svg { display: block; margin: 2em auto; background: #f9f9f9; }
         form label { display: block; margin-bottom: 0.5em; }
         input[type=number] { width: 100%; padding: 0.4em; margin-top: 0.2em; box-sizing: border-box; }
@@ -77,7 +94,18 @@ if (empty($errors)) {
 </head>
 <body>
 <div class="container">
-<h1>The Mason Jar Test</h1>
+<div class="lang-select">
+    <form id="langform">
+        <select name="lang" id="lang">
+            <option value="en"<?php if($lang==='en') echo ' selected'; ?>>English</option>
+            <option value="pl"<?php if($lang==='pl') echo ' selected'; ?>>Polski</option>
+        </select>
+        <?php if ($l1 !== null) { echo '<input type="hidden" name="l1" value="'.htmlspecialchars($l1).'">'; } ?>
+        <?php if ($l2 !== null) { echo '<input type="hidden" name="l2" value="'.htmlspecialchars($l2).'">'; } ?>
+        <?php if ($l3 !== null) { echo '<input type="hidden" name="l3" value="'.htmlspecialchars($l3).'">'; } ?>
+    </form>
+</div>
+<h1><?php echo t('title'); ?></h1>
 <?php if (!empty($errors)): ?>
     <div class="error">
         <?php foreach ($errors as $error): ?>
@@ -86,10 +114,11 @@ if (empty($errors)) {
     </div>
 <?php endif; ?>
 <form>
-    <label>Sand (mm) <input name="l1" type="number" min="0" step="any" value="<?php echo htmlspecialchars($l1 ?? ''); ?>" required></label><br>
-    <label>Silt (mm) <input name="l2" type="number" min="0" step="any" value="<?php echo htmlspecialchars($l2 ?? ''); ?>" required></label><br>
-    <label>Clay (mm) <input name="l3" type="number" min="0" step="any" value="<?php echo htmlspecialchars($l3 ?? ''); ?>" required></label><br>
-    <button type="submit">Calculate</button>
+    <label><?php echo t('sand_mm'); ?> <input name="l1" type="number" min="0" step="any" value="<?php echo htmlspecialchars($l1 ?? ''); ?>" required></label><br>
+    <label><?php echo t('silt_mm'); ?> <input name="l2" type="number" min="0" step="any" value="<?php echo htmlspecialchars($l2 ?? ''); ?>" required></label><br>
+    <label><?php echo t('clay_mm'); ?> <input name="l3" type="number" min="0" step="any" value="<?php echo htmlspecialchars($l3 ?? ''); ?>" required></label><br>
+    <input type="hidden" name="lang" value="<?php echo $lang; ?>">
+    <button type="submit"><?php echo t('calculate'); ?></button>
 </form>
 <?php if (empty($errors) && $sum): ?>
 <!-- <p>Values: A=<?php echo round($a,2); ?>%, B=<?php echo round($b,2); ?>%, C=<?php echo round($c,2); ?>%</p> -->
@@ -97,173 +126,41 @@ if (empty($errors)) {
     <polygon points="50,0 0,86.6 100,86.6" fill="none" stroke="black"/>
     <circle cx="<?php echo $x; ?>" cy="<?php echo $y; ?>" r="2" fill="red"/>
 </svg> -->
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="95%" height="95%" viewBox="-219 -20 440 420">
- <title>SoilTexture USDA</title>
- <desc>A soil texture diagram redrawn from the USDA webpage http://nrcs.usda.gov/Internet/FSE_MEDIA/nrcs142p2_050242.jpg with colours from http://commons.wikimedia.org/wiki/File:SoilTexture_USDA.png by CMG Lee.</desc>
- <style type="text/css">
-#main  { font-size:16px; font-family:Helvetica,Arial,sans-serif; text-anchor:middle;
-         fill:#000000; stroke-linejoin:round; }
-text   { stroke:none; cursor:default; }
-.clay  { fill:#0000ff; stroke:#0000ff; text-anchor:end; }
-.sand  { fill:#009900; stroke:#009900; text-anchor:start; }
-.silt  { fill:#cc0000; stroke:#cc0000; text-anchor:start; }
-.arrow { text-anchor:middle; }
-.thick { stroke-width:2; }
-.point { fill:#000000; stroke:none; text-anchor:start; }
- </style>
- <defs>
-  <pattern id="pattern_grid" patternUnits="userSpaceOnUse" width="40" height="80">
-   <g stroke-width="0.3">
-    <path class="clay" d="M 0, 0 h 40 M 0,40 h 40 M 0,80 h 40"/>
-    <path class="silt" d="M 0,80 l 40,-80"/>
-    <path class="sand" d="M 0, 0 l 40,80"/>
-   </g>
-   <g stroke-width="0.5" stroke-dasharray="1,1.5">
-    <path class="clay" d="M 0,20 h 40 M 0,60 h 40"/>
-    <path class="silt" d="M 0,40 l 20,-40 M 20,80 l 20,-40"/>
-    <path class="sand" d="M 0,40 l 20,40 M 20,0 l 20,40"/>
-   </g>
-  </pattern>
-  <path id="arrow" d="M -100,-35 H 100 m -10,-5 l 10,5 l -10,5" fill="none"/>
-  <path id="line_clay" class="clay" d="M -100,200 H 100"/>
-  <path id="line_silt" class="silt" d="M 40,80 L -120,400"/>
-  <path id="line_sand" class="sand" d="M -60,120 L 80,400"/>
-  <g id="sample1" class="point" transform="translate(-20,200)">
-   <text transform="translate(10,10) scale(0.866,1)" y="0.6ex">Sample 1</text>
-   <ellipse id="sample" rx="5" ry="6"/>
-   <use xlink:href="#sample"/>
-  </g>
-  <g id="sample2" class="point" transform="translate(60,360)">
-   <text transform="translate(10,10) scale(0.866,1)" y="0.6ex">Sample 2</text>
-   <rect x="-4" y="-5" width="8" height="10"/>
-  </g>
-  <g id="sample3" class="point" transform="translate(-60,360)">
-   <text transform="translate(10,10) scale(0.866,1)" y="0.6ex">Sample 3</text>
-   <path d="M 0,-8 l 6,12 h -12"/>
-  </g>
- </defs>
- <circle cx="0" cy="0" r="99999" fill="#ffffff"/>
- <g id="main" transform="scale(1,0.866)">
-  <g stroke="#000000" stroke-width="1">
-   <switch>
-    <g class="clay thick" systemLanguage="aa">
-     <text transform="translate(100,210) scale(0.866,1)" y="0.6ex">50% clay line</text>
-     <use xlink:href="#line_clay"/>
-    </g>
-    <g class="silt thick" systemLanguage="ba">
-     <text transform="translate(-120,400) scale(0.866,1) rotate(-60)" y="-0.6ex">20% silt line</text>
-     <use xlink:href="#line_silt"/>
-     <use xlink:href="#line_clay"/>
-    </g>
-    <g class="sand thick" systemLanguage="ca">
-     <text transform="translate( 80,400) scale(0.866,1) rotate(60)" y="-0.6ex" text-anchor="end">30% sand line</text>
-     <use xlink:href="#line_sand"/>
-     <use xlink:href="#line_silt"/>
-     <use xlink:href="#line_clay"/>
-     <use xlink:href="#sample1"/>
-    </g>
-    <g systemLanguage="da">
-     <use xlink:href="#sample1"/>
-     <use xlink:href="#sample2"/>
-     <use xlink:href="#sample3"/>
-    </g>
-    <g>
-     <path d="M 0,0 l 80,160 l -40,80 h -100 l -30,-60 z" fill="#ffff9c"/><text transform="translate(0,150)" y="0.6ex"><tspan>clay</tspan></text>
-     <path d="M -60,240 h 100 l 25,50 h -100 z" fill="#ceff63"/><text transform="translate(5,270)" y="0.6ex"><tspan>clay loam</tspan></text>
-     <path d="M -35,290 h 90 l -40,80 h -40 l -25,-50 z" fill="#ce9c00"/><text transform="translate(-5,330)" y="0.6ex"><tspan>loam</tspan></text>
-     <path d="M -90,180 l 40,80 h -80 z" fill="#ff0000"/><text transform="translate(-90,230)" y="0.6ex"><tspan>sandy</tspan><tspan x="0" dy="20">clay</tspan></text>
-     <path d="M -130,260 h 80 l 15,30 l -15,30 h -110 z" fill="#ff9c9c"/><text transform="translate(-90,290)" y="0.6ex"><tspan>sandy clay</tspan><tspan x="0" dy="20">loam</tspan></text>
-     <path d="M -160,320 h 110 l 25,50 h 40 l -15,30 h -80 l -90,-60 z" fill="#ffceff"/><text transform="translate(-90,350)" y="0.6ex"><tspan>sandy loam</tspan></text>
-     <path d="M -170,340 l 90,60 h -60 l -40,-40 z" fill="#ffcece"/><text transform="translate(-142,375) scale(0.95,1)" y="0.6ex"><tspan>loamy</tspan><tspan x="13" dy="13">sand</tspan></text>
-     <path d="M -180,360 l 40,40 h -60 z" fill="#ffce9c"/><text transform="translate(-175,390)" y="0.6ex"><tspan>sand</tspan></text>
-     <path d="M 80,160 l 40,80 h -80 z" fill="#9cffce"/><text transform="translate(80,210)" y="0.6ex"><tspan>silty</tspan><tspan x="0" dy="20">clay</tspan></text>
-     <path d="M 40,240 h 80 l 25,50 h -80 z" fill="#63ce9c"/><text transform="translate(90,250)" y="0.6ex"><tspan>silty</tspan><tspan x="5" dy="20">clay loam</tspan></text>
-     <path d="M 55,290 h 90 l 30,60 h -30 l -25,50 h -120 z" fill="#9cce00"/><text transform="translate(90,350)" y="0.6ex"><tspan>silt loam</tspan></text>
-     <path d="M 145,350 h 30 l 25,50 h -80 z" fill="#00ff31"/><text transform="translate(160,370)" y="0.6ex"><tspan>silt</tspan></text>
-    </g>
-   </switch>
-   <path d="M 0,0 l 200,400 h -400 Z" fill="url(#pattern_grid)"/>
-  </g>
-  <g class="clay axis">
-   <g class="arrow" transform="translate(-100,200) scale(0.866,1) rotate(-60)">
-    <use xlink:href="#arrow"/>
-    <text y="0.6ex" dy="-50">Clay Separate (%)</text>
-   </g>
-   <text transform="translate(   0,  0) scale(0.866,1)" y="0.5ex">100&#8202;-</text>
-   <text transform="translate( -20, 40) scale(0.866,1)" y="0.5ex" >90&#8202;-</text>
-   <text transform="translate( -40, 80) scale(0.866,1)" y="0.5ex" >80&#8202;-</text>
-   <text transform="translate( -60,120) scale(0.866,1)" y="0.5ex" >70&#8202;-</text>
-   <text transform="translate( -80,160) scale(0.866,1)" y="0.5ex" >60&#8202;-</text>
-   <text transform="translate(-100,200) scale(0.866,1)" y="0.5ex" >50&#8202;-</text>
-   <text transform="translate(-120,240) scale(0.866,1)" y="0.5ex" >40&#8202;-</text>
-   <text transform="translate(-140,280) scale(0.866,1)" y="0.5ex" >30&#8202;-</text>
-   <text transform="translate(-160,320) scale(0.866,1)" y="0.5ex" >20&#8202;-</text>
-   <text transform="translate(-180,360) scale(0.866,1)" y="0.5ex" >10&#8202;-</text>
-   <text transform="translate(-200,400) scale(0.866,1)" y="0.5ex"  >0&#8202;-</text>
-  </g>
-  <g class="silt axis">
-   <g class="arrow" transform="translate(100,200) scale(0.866,1) rotate(60)">
-    <use xlink:href="#arrow"/>
-    <text y="0.6ex" dy="-50">Silt Separate (%)</text>
-   </g>
-   <text transform="translate(  0,  0) scale(0.866,1) rotate(-60)" y="0.5ex">-&#8201;0</text>
-   <text transform="translate( 20, 40) scale(0.866,1) rotate(-60)" y="0.5ex">-&#8202;10</text>
-   <text transform="translate( 40, 80) scale(0.866,1) rotate(-60)" y="0.5ex">-&#8201;20</text>
-   <text transform="translate( 60,120) scale(0.866,1) rotate(-60)" y="0.5ex">-&#8201;30</text>
-   <text transform="translate( 80,160) scale(0.866,1) rotate(-60)" y="0.5ex">-&#8201;40</text>
-   <text transform="translate(100,200) scale(0.866,1) rotate(-60)" y="0.5ex">-&#8201;50</text>
-   <text transform="translate(120,240) scale(0.866,1) rotate(-60)" y="0.5ex">-&#8201;60</text>
-   <text transform="translate(140,280) scale(0.866,1) rotate(-60)" y="0.5ex">-&#8201;70</text>
-   <text transform="translate(160,320) scale(0.866,1) rotate(-60)" y="0.5ex">-&#8201;80</text>
-   <text transform="translate(180,360) scale(0.866,1) rotate(-60)" y="0.5ex">-&#8201;90</text>
-   <text transform="translate(200,400) scale(0.866,1) rotate(-60)" y="0.5ex">-&#8202;100</text>
-  </g>
-  <g class="sand axis">
-   <g class="arrow" transform="translate(0,400) scale(0.866,1) rotate(180)">
-    <use xlink:href="#arrow"/>
-    <text transform="rotate(180)" y="0.6ex" dy="50">Sand Separate (%)</text>
-   </g>
-   <text transform="translate(-200,400) scale(0.866,1) rotate(60)" y="0.5ex">-&#8202;100</text>
-   <text transform="translate(-160,400) scale(0.866,1) rotate(60)" y="0.5ex">-&#8201;90</text>
-   <text transform="translate(-120,400) scale(0.866,1) rotate(60)" y="0.5ex">-&#8201;80</text>
-   <text transform="translate( -80,400) scale(0.866,1) rotate(60)" y="0.5ex">-&#8201;70</text>
-   <text transform="translate( -40,400) scale(0.866,1) rotate(60)" y="0.5ex">-&#8201;60</text>
-   <text transform="translate(   0,400) scale(0.866,1) rotate(60)" y="0.5ex">-&#8201;50</text>
-   <text transform="translate(  40,400) scale(0.866,1) rotate(60)" y="0.5ex">-&#8201;40</text>
-   <text transform="translate(  80,400) scale(0.866,1) rotate(60)" y="0.5ex">-&#8201;30</text>
-   <text transform="translate( 120,400) scale(0.866,1) rotate(60)" y="0.5ex">-&#8201;20</text>
-   <text transform="translate( 160,400) scale(0.866,1) rotate(60)" y="0.5ex">-&#8202;10</text>
-   <text transform="translate( 200,400) scale(0.866,1) rotate(60)" y="0.5ex">-&#8201;0</text>
-  </g>
- </g>
-<circle cx="<?php echo $X; ?>" cy="<?php echo $Y; ?>" r="5" fill="black"/>
-</svg>
-
-<h2>How To</h2>
+<?php echo strtr(t('triangle_svg'), ['{X}' => $X, '{Y}' => $Y]); ?>
+<h2><?php echo t('howto'); ?></h2>
 <ol>
-  <li>Take the soil sample from the full profile (35-40 cm). </li>
-  <li>Rub it through coarse sieve. </li>
-  <li>Fill a clear jar about one third with soil.</li>
-  <li>Add water and a tbs of dishwasher powder leaving some headspace.</li>
-  <li>Shake vigorously to suspend all particles for a minute or two.</li>
-  <li>Let the jar sit undisturbed for 24 hours.</li>
-  <li>Measure the sand, silt and clay layers as shown below.</li>
+  <li><?php echo t('step1'); ?></li>
+  <li><?php echo t('step2'); ?></li>
+  <li><?php echo t('step3'); ?></li>
+  <li><?php echo t('step4'); ?></li>
+  <li><?php echo t('step5'); ?></li>
+  <li><?php echo t('step6'); ?></li>
+  <li><?php echo t('step7'); ?></li>
 </ol>
 <pre>
 |                         |
-|-------------------------| ← Clay level [mm]
-|        Clay             |
-|-------------------------| ← Silt level [mm]
-|        Silt             |
-|-------------------------| ← Sand level [mm]
-|        Sand             |
-|-------------------------| ← 0 mm (Bottom)
+|-------------------------| ← <?php echo t('pre_clay_level'); ?>
+
+<?php echo t('pre_clay'); ?>
+
+|-------------------------| ← <?php echo t('pre_silt_level'); ?>
+
+<?php echo t('pre_silt'); ?>
+
+|-------------------------| ← <?php echo t('pre_sand_level'); ?>
+
+<?php echo t('pre_sand'); ?>
+
+|-------------------------| ← <?php echo t('pre_zero'); ?>
 </pre>
 <?php elseif (!empty($errors)): ?>
 <!-- Errors shown above -->
 <?php endif; ?>
 </div>
+<script>
+ document.getElementById('lang').addEventListener('change', function(){
+   document.getElementById('langform').submit();
+ });
+</script>
 </body>
 </html>
-
-
