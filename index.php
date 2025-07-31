@@ -54,21 +54,24 @@ if (empty($errors)) {
     $a = 100 * $ca / $sum;
     $b = 100 * $sa / $sum;
 
-    $xA = 50;  $yA = 0;
-    $xB = 0;   $yB = 100 * sqrt(3)/2;
-    $xC = 100; $yC = 100 * sqrt(3)/2;
+    $xA = 50;  $yA = 0;                // top (100% A)
+    $xB = 0;   $yB = 100 * sqrt(3)/2;  // bottom left (100% B)
+    $xC = 100; $yC = 100 * sqrt(3)/2;  // bottom right (100% C)
     $x = 100 - $b - tan(pi()/6) * sqrt(3)/2 * $a;
     $y = sqrt(3)/2 * (100 - $a);
 
+    // New triangle points
     $X_A = 0; $Y_A = 0;
     $X_B = -200; $Y_B = 346;
     $X_C = 200; $Y_C = 346;
 
+    // Compute barycentric coordinates
     $denom = (($yB - $yC)*($xA - $xC) + ($xC - $xB)*($yA - $yC));
     $u = (($yB - $yC)*($x - $xC) + ($xC - $xB)*($y - $yC)) / $denom;
     $v = (($yC - $yA)*($x - $xC) + ($xA - $xC)*($y - $yC)) / $denom;
     $w = 1 - $u - $v;
 
+    // Map to new triangle
     $X = $u * $X_A + $v * $X_B + $w * $X_C;
     $Y = $u * $Y_A + $v * $Y_B + $w * $Y_C;
 }
@@ -118,10 +121,16 @@ if (empty($errors)) {
     <button type="submit"><?php echo t('calculate'); ?></button>
 </form>
 <?php if (empty($errors) && $sum): ?>
+<!-- <p>Values: A=<?php echo round($a,2); ?>%, B=<?php echo round($b,2); ?>%, C=<?php echo round($c,2); ?>%</p> -->
+<!-- <svg width="300" height="260" viewBox="0 0 100 86.6">
+    <polygon points="50,0 0,86.6 100,86.6" fill="none" stroke="black"/>
+    <circle cx="<?php echo $x; ?>" cy="<?php echo $y; ?>" r="2" fill="red"/>
+</svg> -->
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="95%" height="95%" viewBox="-219 -20 440 420">
  <title>SoilTexture USDA</title>
  <style type="text/css">
-#main  { font-size:16px; font-family:Helvetica,Arial,sans-serif; text-anchor:middle; fill:#000000; stroke-linejoin:round; }
+#main  { font-size:16px; font-family:Helvetica,Arial,sans-serif; text-anchor:middle;
+         fill:#000000; stroke-linejoin:round; }
 text   { stroke:none; cursor:default; }
 .clay  { fill:#0000ff; stroke:#0000ff; text-anchor:end; }
 .sand  { fill:#009900; stroke:#009900; text-anchor:start; }
@@ -148,16 +157,16 @@ text   { stroke:none; cursor:default; }
   <path id="line_silt" class="silt" d="M 40,80 L -120,400"/>
   <path id="line_sand" class="sand" d="M -60,120 L 80,400"/>
   <g id="sample1" class="point" transform="translate(-20,200)">
-   <text transform="translate(10,10) scale(0.866,1)" y="0.6ex"><?php echo t('svg_sample1'); ?></text>
+   <text transform="translate(10,10) scale(0.866,1)" y="0.6ex">Sample 1</text>
    <ellipse id="sample" rx="5" ry="6"/>
    <use xlink:href="#sample"/>
   </g>
   <g id="sample2" class="point" transform="translate(60,360)">
-   <text transform="translate(10,10) scale(0.866,1)" y="0.6ex"><?php echo t('svg_sample2'); ?></text>
+   <text transform="translate(10,10) scale(0.866,1)" y="0.6ex">Sample 2</text>
    <rect x="-4" y="-5" width="8" height="10"/>
   </g>
   <g id="sample3" class="point" transform="translate(-60,360)">
-   <text transform="translate(10,10) scale(0.866,1)" y="0.6ex"><?php echo t('svg_sample3'); ?></text>
+   <text transform="translate(10,10) scale(0.866,1)" y="0.6ex">Sample 3</text>
    <path d="M 0,-8 l 6,12 h -12"/>
   </g>
  </defs>
@@ -179,11 +188,16 @@ text   { stroke:none; cursor:default; }
      <use xlink:href="#line_silt"/>
      <use xlink:href="#line_clay"/>
    </g>
+    <g systemLanguage="da">
+     <use xlink:href="#sample1"/>
+     <use xlink:href="#sample2"/>
+     <use xlink:href="#sample3"/>
+    </g>
    <g>
      <path d="M 0,0 l 80,160 l -40,80 h -100 l -30,-60 z" fill="#ffff9c"/><text transform="translate(0,150)" y="0.6ex"><tspan><?php echo t('svg_clay'); ?></tspan></text>
      <path d="M -60,240 h 100 l 25,50 h -100 z" fill="#ceff63"/><text transform="translate(5,270)" y="0.6ex"><tspan><?php echo t('svg_clay_loam'); ?></tspan></text>
      <path d="M -35,290 h 90 l -40,80 h -40 l -25,-50 z" fill="#ce9c00"/><text transform="translate(-5,330)" y="0.6ex"><tspan><?php echo t('svg_loam'); ?></tspan></text>
-     <path d="M -90,180 l 40,80 h -80 z" fill="#ff0000"/><text transform="translate(-90,230)" y="0.6ex"><tspan><?php echo t('svg_sandy'); ?></tspan><tspan x="0" dy="20"><?php echo t('svg_clay'); ?></tspan></text>
+     <path d="M -90,180 l 40,80 h -80 z" fill="#ff0000"/><text transform="translate(-90,230)" y="0.6ex"><tspan><?php echo t('svg_sandy'); ?></tspan><tspan x="0" dy="20"><?php echo t('xys'); ?></tspan></text>
      <path d="M -130,260 h 80 l 15,30 l -15,30 h -110 z" fill="#ff9c9c"/><text transform="translate(-90,290)" y="0.6ex"><tspan><?php echo t('svg_sandy_clay'); ?></tspan><tspan x="0" dy="20"><?php echo t('svg_loam'); ?></tspan></text>
      <path d="M -160,320 h 110 l 25,50 h 40 l -15,30 h -80 l -90,-60 z" fill="#ffceff"/><text transform="translate(-90,350)" y="0.6ex"><tspan><?php echo t('svg_sandy_loam'); ?></tspan></text>
      <path d="M -170,340 l 90,60 h -60 l -40,-40 z" fill="#ffcece"/><text transform="translate(-142,375) scale(0.95,1)" y="0.6ex"><tspan><?php echo t('svg_loamy_sand'); ?></tspan></text>
