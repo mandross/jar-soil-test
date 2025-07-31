@@ -97,18 +97,18 @@ text   { stroke:none; cursor:default; }
      <use xlink:href="#sample3"/>
     </g>
     <g>
-     <path d="M 0,0 l 80,160 l -40,80 h -100 l -30,-60 z" fill="#ffff9c"/><text transform="translate(0,150)" y="0.6ex"><tspan>clay</tspan></text>
-     <path d="M -60,240 h 100 l 25,50 h -100 z" fill="#ceff63"/><text transform="translate(5,270)" y="0.6ex"><tspan>clay loam</tspan></text>
-     <path d="M -35,290 h 90 l -40,80 h -40 l -25,-50 z" fill="#ce9c00"/><text transform="translate(-5,330)" y="0.6ex"><tspan>loam</tspan></text>
-     <path d="M -90,180 l 40,80 h -80 z" fill="#ff0000"/><text transform="translate(-90,230)" y="0.6ex"><tspan>sandy</tspan><tspan x="0" dy="20">clay</tspan></text>
-     <path d="M -130,260 h 80 l 15,30 l -15,30 h -110 z" fill="#ff9c9c"/><text transform="translate(-90,290)" y="0.6ex"><tspan>sandy clay</tspan><tspan x="0" dy="20">loam</tspan></text>
-     <path d="M -160,320 h 110 l 25,50 h 40 l -15,30 h -80 l -90,-60 z" fill="#ffceff"/><text transform="translate(-90,350)" y="0.6ex"><tspan>sandy loam</tspan></text>
-     <path d="M -170,340 l 90,60 h -60 l -40,-40 z" fill="#ffcece"/><text transform="translate(-142,375) scale(0.95,1)" y="0.6ex"><tspan>loamy</tspan><tspan x="13" dy="13">sand</tspan></text>
-     <path d="M -180,360 l 40,40 h -60 z" fill="#ffce9c"/><text transform="translate(-175,390)" y="0.6ex"><tspan>sand</tspan></text>
-     <path d="M 80,160 l 40,80 h -80 z" fill="#9cffce"/><text transform="translate(80,210)" y="0.6ex"><tspan>silty</tspan><tspan x="0" dy="20">clay</tspan></text>
-     <path d="M 40,240 h 80 l 25,50 h -80 z" fill="#63ce9c"/><text transform="translate(90,250)" y="0.6ex"><tspan>silty</tspan><tspan x="5" dy="20">clay loam</tspan></text>
-     <path d="M 55,290 h 90 l 30,60 h -30 l -25,50 h -120 z" fill="#9cce00"/><text transform="translate(90,350)" y="0.6ex"><tspan>silt loam</tspan></text>
-     <path d="M 145,350 h 30 l 25,50 h -80 z" fill="#00ff31"/><text transform="translate(160,370)" y="0.6ex"><tspan>silt</tspan></text>
+     <path d="M 0,0 l 80,160 l -40,80 h -100 l -30,-60 z" fill="#ffff9c"/><text transform="translate(0,150)" y="0.6ex"><tspan>glina</tspan></text>
+     <path d="M -60,240 h 100 l 25,50 h -100 z" fill="#ceff63"/><text transform="translate(5,270)" y="0.6ex"><tspan>ił gliniasty</tspan></text>
+     <path d="M -35,290 h 90 l -40,80 h -40 l -25,-50 z" fill="#ce9c00"/><text transform="translate(-5,330)" y="0.6ex"><tspan>ił</tspan></text>
+     <path d="M -90,180 l 40,80 h -80 z" fill="#ff0000"/><text transform="translate(-90,230)" y="0.6ex"><tspan>glina</tspan><tspan x="0" dy="20">pia.</tspan></text>
+     <path d="M -130,260 h 80 l 15,30 l -15,30 h -110 z" fill="#ff9c9c"/><text transform="translate(-90,290)" y="0.6ex"><tspan>Ił piaszczysto-</tspan><tspan x="0" dy="20">gliniasty</tspan></text>
+     <path d="M -160,320 h 110 l 25,50 h 40 l -15,30 h -80 l -90,-60 z" fill="#ffceff"/><text transform="translate(-90,350)" y="0.6ex"><tspan>ił piaszczysty</tspan></text>
+     <path d="M -170,340 l 90,60 h -60 l -40,-40 z" fill="#ffcece"/><text transform="translate(-142,375) scale(0.95,1)" y="0.6ex"><tspan>pias.</tspan><tspan x="13" dy="13">ilasty</tspan></text>
+     <path d="M -180,360 l 40,40 h -60 z" fill="#ffce9c"/><text transform="translate(-175,390)" y="0.6ex"><tspan>pias.</tspan></text>
+     <path d="M 80,160 l 40,80 h -80 z" fill="#9cffce"/><text transform="translate(80,210)" y="0.6ex"><tspan>glina</tspan><tspan x="0" dy="20">pylasta</tspan></text>
+     <path d="M 40,240 h 80 l 25,50 h -80 z" fill="#63ce9c"/><text transform="translate(90,250)" y="0.6ex"><tspan>ił pylasto-</tspan><tspan x="5" dy="20">gliniasty</tspan></text>
+     <path d="M 55,290 h 90 l 30,60 h -30 l -25,50 h -120 z" fill="#9cce00"/><text transform="translate(90,350)" y="0.6ex"><tspan>ił pylasty</tspan></text>
+     <path d="M 145,350 h 30 l 25,50 h -80 z" fill="#00ff31"/><text transform="translate(160,370)" y="0.6ex"><tspan>pył</tspan></text>
     </g>
    </switch>
    <path d="M 0,0 l 200,400 h -400 Z" fill="url(#pattern_grid)"/>
@@ -116,7 +116,7 @@ text   { stroke:none; cursor:default; }
   <g class="clay axis">
    <g class="arrow" transform="translate(-100,200) scale(0.866,1) rotate(-60)">
     <use xlink:href="#arrow"/>
-    <text y="0.6ex" dy="-50">Clay Separate (%)</text>
+    <text y="0.6ex" dy="-50">Udział gliny (%)</text>
    </g>
    <text transform="translate(   0,  0) scale(0.866,1)" y="0.5ex">100&#8202;-</text>
    <text transform="translate( -20, 40) scale(0.866,1)" y="0.5ex" >90&#8202;-</text>
@@ -133,7 +133,7 @@ text   { stroke:none; cursor:default; }
   <g class="silt axis">
    <g class="arrow" transform="translate(100,200) scale(0.866,1) rotate(60)">
     <use xlink:href="#arrow"/>
-    <text y="0.6ex" dy="-50">Silt Separate (%)</text>
+    <text y="0.6ex" dy="-50">Udział pyłu (%)</text>
    </g>
    <text transform="translate(  0,  0) scale(0.866,1) rotate(-60)" y="0.5ex">-&#8201;0</text>
    <text transform="translate( 20, 40) scale(0.866,1) rotate(-60)" y="0.5ex">-&#8202;10</text>
@@ -150,7 +150,7 @@ text   { stroke:none; cursor:default; }
   <g class="sand axis">
    <g class="arrow" transform="translate(0,400) scale(0.866,1) rotate(180)">
     <use xlink:href="#arrow"/>
-    <text transform="rotate(180)" y="0.6ex" dy="50">Sand Separate (%)</text>
+    <text transform="rotate(180)" y="0.6ex" dy="50">Udział piasku (%)</text>
    </g>
    <text transform="translate(-200,400) scale(0.866,1) rotate(60)" y="0.5ex">-&#8202;100</text>
    <text transform="translate(-160,400) scale(0.866,1) rotate(60)" y="0.5ex">-&#8201;90</text>
