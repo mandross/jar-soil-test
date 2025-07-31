@@ -1,9 +1,9 @@
 <?php
 return [
     'title' => 'The Mason Jar Test',
-    'sand_mm' => 'Sand (mm)',
-    'silt_mm' => 'Silt (mm)',
-    'clay_mm' => 'Clay (mm)',
+    'sand_mm' => 'Sand level (mm)',
+    'silt_mm' => 'Silt level (mm)',
+    'clay_mm' => 'Clay level (mm)',
     'calculate' => 'Calculate',
     'all_fields' => 'All fields are required.',
     'sand_err' => 'Sand level must be greater than or equal to 0.',

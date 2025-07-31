@@ -1,9 +1,9 @@
 <?php
 return [
     'title' => 'Test Słoikowy',
-    'sand_mm' => 'Piasek (mm)',
-    'silt_mm' => 'Pył (mm)',
-    'clay_mm' => 'Glina (mm)',
+    'sand_mm' => 'Poziom piasku (mm)',
+    'silt_mm' => 'Poziom pyłu (mm)',
+    'clay_mm' => 'Poziom gliny (mm)',
     'calculate' => 'Oblicz',
     'all_fields' => 'Wszystkie pola są wymagane.',
     'sand_err' => 'Poziom piasku musi być ≥ 0.',
@@ -15,7 +15,7 @@ return [
     'step2' => 'Przetrzyj ją przez grube sito.',
     'step3' => 'Napełnij przezroczysty słoik do jednej trzeciej ziemią.',
     'step4' => 'Dodaj wodę i łyżkę proszku do zmywarki zostawiając miejsce.',
-    'step5' => 'Mocno wstrząsaj minutę lub dwie, by zawiesić cząstki.',
+    'step5' => 'Mocno wstrząsaj minutę lub dwie.',
     'step6' => 'Pozostaw słoik na 24 godziny.',
     'step7' => 'Zmierz warstwy piasku, pyłu i gliny jak poniżej.',
     'pre_clay_level' => 'Poziom gliny [mm]',
